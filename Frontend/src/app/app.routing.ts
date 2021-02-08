@@ -149,6 +149,13 @@ export const rootRouterConfig: Routes = [
         data: {title: 'Employee', breadcrumb: 'Employee'},
         canLoad: [CanLoadModule]
       },
+      // Import
+      {
+        path: 'import',
+        loadChildren: () => import('./module/import/import.module').then(m => m.ImportModule),
+        data: {title: 'Import', breadcrumb: 'Import'},
+        canLoad: [CanLoadModule]
+      },
 
 
     ]

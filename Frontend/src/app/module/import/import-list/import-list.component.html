@@ -1,0 +1,128 @@
+<div fxLayout="row" class="ml-05 mr-05">
+  <div fxFlex="50">
+    <app-breadcrumb></app-breadcrumb>
+  </div>
+  <div fxLayout="row" fxLayoutGap="8px" fxFlex="50" fxLayoutAlign="end center">
+    <div fxLayout="row" fxLayoutAlign="end center">
+      <div class="upload-btn-wrapper">
+        <button mat-raised-button color="primary" matTooltip="import" class="mr-05"><mat-icon class="mr-05">cloud_upload</mat-icon>Import</button>
+        <input mat-raised-button type="file" name="file" accept=".xlsx" #file (change)="chooseDocument($event)"/>
+      </div>
+  
+      <button mat-raised-button color="primary" matTooltip="list"><mat-icon class="mr-05">view_stream</mat-icon>Site List</button>
+    </div>
+  </div>
+</div>
+
+<mat-card>
+  <div fxLayout="row wrap" class="mb-1">
+    <div fxFlex="100" fxFlex.gt-sm="25" fxFlex.sm="50">
+      <mat-card [ngStyle]="{background: '#222A45'}">
+        <mat-card-title align="center">
+          <h3 class="m-0 font-normal card-title-text text-white" >22,450</h3>
+        </mat-card-title>
+        <mat-card-content align="center">
+          <small class="text-white">Total Record</small>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div fxFlex="100" fxFlex.gt-sm="25" fxFlex.sm="50">
+      <mat-card [ngStyle]="{background: '#3F51B5'}">
+        <mat-card-title align="center">
+          <h3 class="m-0 font-normal card-title-text text-white">22,450</h3>
+        </mat-card-title>
+        <mat-card-content align="center">
+          <small class="text-white">Total Exist Record</small>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div fxFlex="100" fxFlex.gt-sm="25" fxFlex.sm="50">
+      <mat-card [ngStyle]="{background: '#FF8A48'}">
+        <mat-card-title align="center">
+          <h3 class="m-0 font-normal card-title-text text-white" >22,450</h3>
+        </mat-card-title>
+        <mat-card-content align="center">
+          <small class="text-white">Total New Record</small>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div fxFlex="100" fxFlex.gt-sm="25" fxFlex.sm="50">
+      <mat-card [ngStyle]="{background: '#FF1515'}">
+        <mat-card-title align="center">
+          <h3 class="m-0 font-normal card-title-text text-white" >22,450</h3> 
+        </mat-card-title>
+        <mat-card-content align="center">
+          <small class="text-white">Total Fail Record</small>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <div fxLayout="row wrap" class="ml-05 mr-05">
+    <div fxFlex="100">
+      <div class="mat-elevation-z8">
+        <mat-table [dataSource]="dataSource" matSort >
+            <ng-container matColumnDef="owner">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Side Owner </mat-header-cell>
+              <mat-cell *matCellDef="let row" data-label="owner"> {{row.owner}} </mat-cell>
+            </ng-container>
+        
+            <ng-container matColumnDef="code">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Admin Code </mat-header-cell>
+              <mat-cell *matCellDef="let row" data-label="code"> In Progress </mat-cell>
+            </ng-container>
+        
+            <ng-container matColumnDef="sranname">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> SRAN Name </mat-header-cell>
+              <mat-cell *matCellDef="let row" data-label="sranname"> What's wrong ? </mat-cell>
+            </ng-container>
+    
+            <ng-container matColumnDef="btsname">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> BTS Name </mat-header-cell>
+              <mat-cell *matCellDef="let row" data-label="btsname"> What's wrong ? </mat-cell>
+            </ng-container>
+    
+            <ng-container matColumnDef="ptype">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Product Type </mat-header-cell>
+              <mat-cell *matCellDef="let row" data-label="ptype"> What's wrong ? </mat-cell>
+            </ng-container>
+    
+            <ng-container matColumnDef="sitecategory">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Site Category </mat-header-cell>
+              <mat-cell *matCellDef="let row" data-label="sitecategory"> What's wrong ? </mat-cell>
+            </ng-container>
+    
+            <ng-container matColumnDef="lat">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Latitude </mat-header-cell>
+              <mat-cell *matCellDef="let row" data-label="lat"> What's wrong ? </mat-cell>
+            </ng-container>
+    
+            <ng-container matColumnDef="long">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Longitude </mat-header-cell>
+              <mat-cell *matCellDef="let row" data-label="long"> What's wrong ? </mat-cell>
+            </ng-container>
+    
+            <ng-container matColumnDef="action">
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Action </mat-header-cell>
+              <mat-cell *matCellDef="let row" data-label="action"> 
+                <button mat-icon-button [matMenuTriggerFor]="msgMenu" class="hidden-on-open">
+                  <mat-icon class="text-muted">more_vert</mat-icon>
+                </button>
+                <mat-menu #msgMenu="matMenu">
+                  <button mat-menu-item (click)="onView(row.id)"><mat-icon>visibility</mat-icon> veiw</button>
+                </mat-menu>
+              </mat-cell>
+            </ng-container>
+        
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;">
+            </mat-row>
+        </mat-table>
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+      </div>
+    </div>
+  </div>
+</mat-card>
