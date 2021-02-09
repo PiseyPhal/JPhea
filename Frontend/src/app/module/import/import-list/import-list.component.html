@@ -63,66 +63,7 @@
 
   <div fxLayout="row wrap" class="ml-05 mr-05">
     <div fxFlex="100">
-      <div class="mat-elevation-z8">
-        <mat-table [dataSource]="dataSource" matSort >
-            <ng-container matColumnDef="owner">
-              <mat-header-cell *matHeaderCellDef mat-sort-header> Side Owner </mat-header-cell>
-              <mat-cell *matCellDef="let row" data-label="owner"> {{row.owner}} </mat-cell>
-            </ng-container>
-        
-            <ng-container matColumnDef="code">
-              <mat-header-cell *matHeaderCellDef mat-sort-header> Admin Code </mat-header-cell>
-              <mat-cell *matCellDef="let row" data-label="code"> In Progress </mat-cell>
-            </ng-container>
-        
-            <ng-container matColumnDef="sranname">
-              <mat-header-cell *matHeaderCellDef mat-sort-header> SRAN Name </mat-header-cell>
-              <mat-cell *matCellDef="let row" data-label="sranname"> What's wrong ? </mat-cell>
-            </ng-container>
-    
-            <ng-container matColumnDef="btsname">
-              <mat-header-cell *matHeaderCellDef mat-sort-header> BTS Name </mat-header-cell>
-              <mat-cell *matCellDef="let row" data-label="btsname"> What's wrong ? </mat-cell>
-            </ng-container>
-    
-            <ng-container matColumnDef="ptype">
-              <mat-header-cell *matHeaderCellDef mat-sort-header> Product Type </mat-header-cell>
-              <mat-cell *matCellDef="let row" data-label="ptype"> What's wrong ? </mat-cell>
-            </ng-container>
-    
-            <ng-container matColumnDef="sitecategory">
-              <mat-header-cell *matHeaderCellDef mat-sort-header> Site Category </mat-header-cell>
-              <mat-cell *matCellDef="let row" data-label="sitecategory"> What's wrong ? </mat-cell>
-            </ng-container>
-    
-            <ng-container matColumnDef="lat">
-              <mat-header-cell *matHeaderCellDef mat-sort-header> Latitude </mat-header-cell>
-              <mat-cell *matCellDef="let row" data-label="lat"> What's wrong ? </mat-cell>
-            </ng-container>
-    
-            <ng-container matColumnDef="long">
-              <mat-header-cell *matHeaderCellDef mat-sort-header> Longitude </mat-header-cell>
-              <mat-cell *matCellDef="let row" data-label="long"> What's wrong ? </mat-cell>
-            </ng-container>
-    
-            <ng-container matColumnDef="action">
-              <mat-header-cell *matHeaderCellDef mat-sort-header> Action </mat-header-cell>
-              <mat-cell *matCellDef="let row" data-label="action"> 
-                <button mat-icon-button [matMenuTriggerFor]="msgMenu" class="hidden-on-open">
-                  <mat-icon class="text-muted">more_vert</mat-icon>
-                </button>
-                <mat-menu #msgMenu="matMenu">
-                  <button mat-menu-item (click)="onView(row.id)"><mat-icon>visibility</mat-icon> veiw</button>
-                </mat-menu>
-              </mat-cell>
-            </ng-container>
-        
-            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: displayedColumns;">
-            </mat-row>
-        </mat-table>
-        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
-      </div>
+      <app-grid [dataStore]="dataStore" [itemTableColumn]="itemTableColumn" (paginationChanged)="list($event)"></app-grid>
     </div>
   </div>
 </mat-card>

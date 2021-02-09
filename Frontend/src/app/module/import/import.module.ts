@@ -9,6 +9,7 @@ import { RouterModule } from '@angular/router';
 import { ImportRoutes } from './import.routing.module';
 import { ImportViewComponent } from './import-view/import-view.component';
 import { SharedMaterialModule, SharedComponentsModule, SharedModule, SharedPipesModule } from '@ecoinsoft/core-frontend/src/public-api';
+import { DirectivesModule } from './file-drag-drop/directives.module';
 
 @NgModule({
   declarations: [ImportFormComponent, ImportListComponent, ImportViewComponent],
@@ -21,6 +22,7 @@ import { SharedMaterialModule, SharedComponentsModule, SharedModule, SharedPipes
     SharedModule,
     SharedPipesModule,
     TranslateModule,
+    DirectivesModule,
     RouterModule.forChild(ImportRoutes)
   ]
 })

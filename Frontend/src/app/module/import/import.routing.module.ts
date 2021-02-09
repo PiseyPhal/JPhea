@@ -7,13 +7,13 @@ import { ImportViewComponent } from './import-view/import-view.component';
 export const ImportRoutes: Routes = [
   { 
     path: '', 
-    component: ImportListComponent, 
-    data: { title: 'List', breadcrumb: 'List' } 
+    component: ImportFormComponent, 
+    data: { title: 'Form', breadcrumb: 'New' } 
   },
   {
-    path: "add",
-    component: ImportFormComponent,
-    data: { title: 'Form', breadcrumb: 'New' } 
+    path: "list",
+    component: ImportListComponent,
+    data: { title: 'List', breadcrumb: 'Success' } 
   },
   {
     path: "view/:id",

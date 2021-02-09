@@ -10,6 +10,7 @@ export enum ApiEndpoint {
       Employee="/api/employee", 
       Expanse ="/api/expanse" , 
       Todo = "/api/todo" , 
+      ImportAPI = "/api/import",
 
       //  report 
       Dashboard = '/api/dashboard'

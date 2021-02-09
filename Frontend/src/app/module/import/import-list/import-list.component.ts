@@ -1,42 +1,65 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatTable } from '@angular/material/table';
+import { AbstractGrid, AppColumn, AppLoaderService } from '@ecoinsoft/core-frontend/src/public-api';
+import { AppConfirmService } from '@ecoinsoft/core-frontend/src/lib/shared/services/app-confirm/app-confirm.service';
+import { ImportService } from 'app/services/import.service';
 
 @Component({
   selector: 'app-import-list',
   templateUrl: './import-list.component.html',
   styleUrls: ['./import-list.component.scss']
 })
-export class ImportListComponent implements OnInit {
-  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: false}) sort: MatSort;
-  
-  displayedColumns: string[] = ['owner', 'code', 'sranname', 'btsname', 'ptype', 'sitecategory', 'lat', 'long', 'action'];
-  dataSource: any;
-  
-  constructor(private route: Router) { }
+export class ImportListComponent extends AbstractGrid implements OnInit {
 
-  ngOnInit() { 
-    this.dataSource = [
+  @ViewChild(MatTable, {static: false}) itemTable: MatTable<any>;
+  
+  constructor
+  (
+    private importService: ImportService,
+    private confirmService: AppConfirmService,
+    private loader: AppLoaderService
+  ) {super(importService, loader, { isLoad: false }); }
+
+  getcolumn(): AppColumn[] {
+    return [
       {
-        id: 1,
-        owner: "PUSSYY", 
-        code: 'Hydrogen', 
-        sranname: 1.0079, 
-        btsname: 'H',
-        ptype: 'Hydrogen', 
-        sitecategory: 'H',
-        lat: 1, 
-        long: 2
+        displayName: 'Site Owner', dataIndex: 'siteOwner'
+      },
+      {
+        displayName: 'Admin Code', dataIndex: 'adminCode'
+      },
+      {
+        displayName: 'SRAN Name', dataIndex: 'sRANName'
+      },
+      {
+        displayName: 'BTS Name No Tect', dataIndex: 'bTSNameNoTech'
+      },
+      {
+        displayName: 'Product Type', dataIndex: 'productType'
+      },
+      {
+        displayName: 'Site Category', dataIndex: 'siteCategory'
+      },
+      {
+        displayName: 'Latitude', dataIndex: 'latitude'
+      },
+      {
+        displayName: 'Longitude', dataIndex: 'longitude'
+      },
+      {
+        displayName: 'Action', dataIndex: 'id', actionColumn: [
+          {
+            icon: 'visibility',
+            link: '/import/view',
+            tooltip: 'View'
+          }
+        ]
       }
-    ]
+    ];
   }
 
-  onView(id: number) {
-    // route to page view
-    this.route.navigateByUrl(`import/view/${id}`)
-  }
+
+  ngOnInit() { }
 
   /**
    * Choose file, then push to document list
