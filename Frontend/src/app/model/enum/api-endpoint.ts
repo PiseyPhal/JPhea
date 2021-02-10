@@ -11,6 +11,7 @@ export enum ApiEndpoint {
       Expanse ="/api/expanse" , 
       Todo = "/api/todo" , 
       ImportAPI = "/api/import",
+      SiteAPI = "/api/site",
 
       //  report 
       Dashboard = '/api/dashboard'

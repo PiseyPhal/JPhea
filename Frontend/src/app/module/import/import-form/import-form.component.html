@@ -9,20 +9,18 @@
         <mat-card-content>
             <div fxLayout="row wrap" fxLayoutAlign="center start">
                 <div fxFlex="50">
-                    <mat-card class="backgrond-color-card" fileDragDrop (filesChangeEmiter)="chooseDocument($event)">
-                        <input type="file" name="file" id="file" (change)="chooseDocument($event)" >
-                        <label for="file" class="drag-zone">
-                            <div fxLayoutAlign="center">
-                                <mat-icon class="big-icon">cloud_upload</mat-icon>
+                    <mat-card class="backgrond-color-card drag-zone" fileDragDrop (filesChangeEmiter)="chooseDocument($event)">
+                        <div fxLayoutAlign="center">
+                            <mat-icon class="big-icon">cloud_upload</mat-icon>
+                        </div>
+                        <span>
+                            <p align="center">Drag and Drop your excel file here to upload</p> 
+                            <p align="center">or</p>
+                            <div fxLayoutAlign="center" class="upload-btn-wrapper">
+                                <button mat-raised-button color="primary" matTooltip="import" class="mr-05">Choose File</button>
+                                <input mat-raised-button type="file" name="file" #file (change)="chooseDocument($event)"/>
                             </div>
-                            <span>
-                                <p align="center">Drag and Drop your excel file here to upload</p> 
-                                <p align="center">or</p>
-                                <div fxLayoutAlign="center" class="upload-btn-wrapper">
-                                    <button mat-raised-button color="primary" matTooltip="import" class="mr-05">Choose File</button>
-                                </div>
-                            </span>
-                        </label>  
+                        </span>
                     </mat-card>
                 </div>
             </div>

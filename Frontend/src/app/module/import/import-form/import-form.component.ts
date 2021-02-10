@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-import-form',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ImportFormComponent implements OnInit {
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit() {}
 
@@ -16,17 +17,11 @@ export class ImportFormComponent implements OnInit {
    * @param event 
    */
   chooseDocument(event) {
-    console.log(event[0]);
-    return;
-    // Substring file's extention '.CSV'
-    let fileExtention = event.FileList.file[0].name
-    fileExtention = fileExtention.substring(fileExtention.lastIndexOf('.'))
-    // Compare extention file
-    if (fileExtention.toUpperCase() !== '.XLSX') {
-      // Return message warning of wrong file extention.
-      console.log('Uploading must be file is ".XLSX" format, Please try again.');
-      
-    }
+    const file = event.target ? event.target.files : event;
+    
+    // Redirect to import list success
+    this.router.navigateByUrl("/import/list")
+
   }
 
 }
