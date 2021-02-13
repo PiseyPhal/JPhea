@@ -3,20 +3,39 @@
       <app-breadcrumb></app-breadcrumb>
     </div>
     <div fxLayout="row" fxLayoutGap="8px" fxFlex="50" fxLayoutAlign="end center">
-      <mat-form-field class="mr-05">
-        <input type="text" autocomplete="off" matInput placeholder="Search by admin code">
-      </mat-form-field>
-      <mat-form-field class="mr-05">
-        <input type="text" autocomplete="off" matInput placeholder="Search by hub">
-      </mat-form-field>
-      <mat-form-field class="mr-05">
-        <input type="text" autocomplete="off" matInput placeholder="Search by ">
-      </mat-form-field>
       <div>
-        <button mat-raised-button color="primary" matTooltip="search">Search</button>
+        <button mat-raised-button color="primary" matTooltip="search" [matMenuTriggerFor]="theMenu">Advance Search</button>
+        <mat-menu #theMenu="matMenu" [overlapTrigger]="false">
+          <mat-toolbar-row (click)="$event.stopPropagation(); false;">
+            <mat-form-field class="full-width">
+              <input matInput type="text" placeholder="Admin code" name="code"/>
+            </mat-form-field>
+          </mat-toolbar-row>
+          
+          <mat-toolbar-row (click)="$event.stopPropagation(); false;">
+            <mat-form-field class="full-width">
+              <input matInput type="text" placeholder="Site name" name="siteName"/>
+            </mat-form-field>
+          </mat-toolbar-row>
+          
+          <mat-toolbar-row (click)="$event.stopPropagation(); false;">
+            <mat-form-field class="full-width">
+              <input matInput type="password" placeholder="Hub name" name="hubName"/>
+            </mat-form-field>
+          </mat-toolbar-row>
+          <mat-toolbar-row>
+            <button mat-raised-button color="primary" class="mr-05"><mat-icon>search</mat-icon>Search</button>
+            <button mat-raised-button color="warn"><mat-icon>clear</mat-icon>Clear</button>
+          </mat-toolbar-row>
+        </mat-menu>
       </div>
-      <button mat-raised-button color="warn" matTooltip="clear" class="mr-05">Clear</button>
-  
+
+      <div>
+        <button mat-raised-button color="primary" matTooltip="import"><mat-icon class="mr-05">cloud_upload</mat-icon>Import</button>
+      </div>
+      <div class="mr-05">
+        <button mat-raised-button color="primary" matTooltip="export"><mat-icon class="mr-05">save_alt</mat-icon>Export</button>
+      </div>
     </div>
 </div>
 

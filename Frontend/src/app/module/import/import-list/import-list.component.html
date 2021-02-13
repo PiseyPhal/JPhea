@@ -1,4 +1,4 @@
-<div fxLayout="row" class="ml-05 mr-05">
+<div fxLayout="row">
   <div fxFlex="50">
     <app-breadcrumb></app-breadcrumb>
   </div>
@@ -9,7 +9,7 @@
         <input mat-raised-button type="file" name="file" accept=".xlsx" #file (change)="chooseDocument($event)"/>
       </div>
   
-      <button mat-raised-button color="primary" matTooltip="list" [routerLink]="['/site']" routerLinkActive="router-link-active" ><mat-icon class="mr-05">view_stream</mat-icon>Site List</button>
+      <button mat-raised-button color="primary" matTooltip="list" [routerLink]="['/site']" routerLinkActive="router-link-active" class="mr-05"><mat-icon class="mr-05">list</mat-icon>Site List</button>
     </div>
   </div>
 </div>
