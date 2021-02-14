@@ -3,6 +3,8 @@ import { AbstractGrid, AppLoaderService, AppColumn } from '@ecoinsoft/core-front
 import { MatTable } from '@angular/material/table';
 import { SiteService } from 'app/services/site.service';
 import { AppConfirmService } from '@ecoinsoft/core-frontend/src/lib/shared/services/app-confirm/app-confirm.service';
+import { FormGroup, FormBuilder } from '@angular/forms';
+import { HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'app-site-list',
@@ -11,12 +13,15 @@ import { AppConfirmService } from '@ecoinsoft/core-frontend/src/lib/shared/servi
 })
 export class SiteListComponent extends AbstractGrid implements OnInit {
   @ViewChild(MatTable, {static: false}) itemTable: MatTable<any>;
+
+  form: FormGroup
   
   constructor
   (
     private siteService: SiteService,
     private confirmService: AppConfirmService,
-    private loader: AppLoaderService
+    private loader: AppLoaderService,
+    private fb: FormBuilder
   ) {super(siteService, loader, { isLoad: false }); }
 
   getcolumn(): AppColumn[] {
@@ -57,7 +62,43 @@ export class SiteListComponent extends AbstractGrid implements OnInit {
     ];
   }
 
+  // On start up form of list site
+  onForm() {
+    this.form = this.fb.group({
+      adminCode: [null],
+      officialSiteName: [null],
+      hubSite: [null]
+    })
+  }
+
+  // Search in list site by admin code, site, hub
+  search() {
+    if(!this.form.value)
+      return;
+
+    let params = {
+      params: new HttpParams()
+      .set("adminCode", this.form.value.adminCode)
+      .set("officialSiteName", this.form.value.officialSiteName)
+      .set("hubSite", this.form.value.hubSite)
+    }
+
+    this.loader.open()
+    this.siteService.list(params).subscribe(res => {
+        if(res) {
+          this.dataStore = res['data']
+          this.loader.close();
+        } 
+    }, err => this.loader.close())
+    
+  }
+
+  clear() {
+
+  }
+
   ngOnInit(): void {
+    this.onForm()
   }
 
 }

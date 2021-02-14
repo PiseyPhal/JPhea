@@ -3,6 +3,7 @@ import { MatTable } from '@angular/material/table';
 import { AbstractGrid, AppColumn, AppLoaderService } from '@ecoinsoft/core-frontend/src/public-api';
 import { AppConfirmService } from '@ecoinsoft/core-frontend/src/lib/shared/services/app-confirm/app-confirm.service';
 import { ImportService } from 'app/services/import.service';
+import {ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-import-list',
@@ -17,7 +18,8 @@ export class ImportListComponent extends AbstractGrid implements OnInit {
   (
     private importService: ImportService,
     private confirmService: AppConfirmService,
-    private loader: AppLoaderService
+    private loader: AppLoaderService,
+    private _route: ActivatedRoute
   ) {super(importService, loader, { isLoad: false }); }
 
   getcolumn(): AppColumn[] {
@@ -59,7 +61,13 @@ export class ImportListComponent extends AbstractGrid implements OnInit {
   }
 
 
-  ngOnInit() { }
+  ngOnInit() {
+    const fileId: number = +this._route.snapshot.queryParamMap.get('fileId');
+
+    if(fileId) {
+      this.getFileDetail(fileId);
+    }
+  }
 
   /**
    * Choose file, then push to document list
@@ -75,6 +83,10 @@ export class ImportListComponent extends AbstractGrid implements OnInit {
       console.log('Uploading must be file is ".XLSX" format, Please try again.');
       
     }
+  }
+
+  getFileDetail(id: number) {
+    
   }
 
 }

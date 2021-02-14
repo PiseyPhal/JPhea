@@ -5,29 +5,31 @@
     <div fxLayout="row" fxLayoutGap="8px" fxFlex="50" fxLayoutAlign="end center">
       <div>
         <button mat-raised-button color="primary" matTooltip="search" [matMenuTriggerFor]="theMenu">Advance Search</button>
-        <mat-menu #theMenu="matMenu" [overlapTrigger]="false">
-          <mat-toolbar-row (click)="$event.stopPropagation(); false;">
-            <mat-form-field class="full-width">
-              <input matInput type="text" placeholder="Admin code" name="code"/>
-            </mat-form-field>
-          </mat-toolbar-row>
-          
-          <mat-toolbar-row (click)="$event.stopPropagation(); false;">
-            <mat-form-field class="full-width">
-              <input matInput type="text" placeholder="Site name" name="siteName"/>
-            </mat-form-field>
-          </mat-toolbar-row>
-          
-          <mat-toolbar-row (click)="$event.stopPropagation(); false;">
-            <mat-form-field class="full-width">
-              <input matInput type="password" placeholder="Hub name" name="hubName"/>
-            </mat-form-field>
-          </mat-toolbar-row>
-          <mat-toolbar-row>
-            <button mat-raised-button color="primary" class="mr-05"><mat-icon>search</mat-icon>Search</button>
-            <button mat-raised-button color="warn"><mat-icon>clear</mat-icon>Clear</button>
-          </mat-toolbar-row>
-        </mat-menu>
+        <form [formGroup]="form" (ngSubmit)="search()">
+          <mat-menu #theMenu="matMenu" [overlapTrigger]="false">
+            <mat-toolbar-row (click)="$event.stopPropagation(); false;">
+              <mat-form-field class="full-width">
+                <input matInput type="text" placeholder="Admin code" name="code" formControlName="adminCode"/>
+              </mat-form-field>
+            </mat-toolbar-row>
+            
+            <mat-toolbar-row (click)="$event.stopPropagation(); false;">
+              <mat-form-field class="full-width">
+                <input matInput type="text" placeholder="Site name" name="siteName" formControlName="officialSiteName"/>
+              </mat-form-field>
+            </mat-toolbar-row>
+            
+            <mat-toolbar-row (click)="$event.stopPropagation(); false;">
+              <mat-form-field class="full-width">
+                <input matInput type="password" placeholder="Hub name" name="hubName" formControlName="hubSite"/>
+              </mat-form-field>
+            </mat-toolbar-row>
+            <mat-toolbar-row>
+              <button mat-raised-button color="primary" class="mr-05" [type]="'submit'"><mat-icon>search</mat-icon>Search</button>
+              <button mat-raised-button color="warn" (click)="clear()"><mat-icon>clear</mat-icon>Clear</button>
+            </mat-toolbar-row>
+          </mat-menu>
+        </form>  
       </div>
 
       <div>
