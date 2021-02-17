@@ -20,6 +20,10 @@ export class ImportService extends AbstractRestService {
     const formData = new FormData()
     formData.append('filesName', file[0])
   
-    return this.httpService.post<DataResponse>(ApiEndpoint.ImportAPI, formData)
+    return this.httpService.post<DataResponse>(ApiEndpoint.UploadFileAPI, formData);
+  }
+
+  downloadFileTemplet() {
+    return this.httpService.get<DataResponse>(ApiEndpoint.FileTemplateAPI);
   }
 }

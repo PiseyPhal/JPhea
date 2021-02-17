@@ -2,7 +2,8 @@ import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter } from '
 import { Router } from '@angular/router';
 import { ImportService } from 'app/services/import.service';
 import { AppLoaderService } from '@ecoinsoft/core-frontend/src/public-api';
-import { query } from '@angular/animations';
+import { saveAs } from 'file-saver';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-import-form',
@@ -13,6 +14,7 @@ export class ImportFormComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private sanitizer: DomSanitizer,
     private importService: ImportService,
     private loader: AppLoaderService) 
     { }
@@ -35,14 +37,21 @@ export class ImportFormComponent implements OnInit {
         this.resetFile()
       
         // redirect import list
-        this.router.navigate(['/import/list'], {queryParams: {"fileId": res['data']?.id}});
+        this.router.navigate(['/import/list'], {queryParams: {"importId": res['data']?.id}});
       }
     }, err => this.loader.close())
   }
 
+  fileUrl: any;
+
   // Download file as excel ".xlsx"
-  downloadFile(file: any) {
-    window.open(file)
+  downloadFile() {
+    this.importService.downloadFileTemplet().subscribe((res) => {
+      if (res) {
+        saveAs(res, 'archive.zip');
+      }
+
+    }, err => console.error("Unexpected error"));
   }
 
   // Reset file to empty value.

@@ -19,7 +19,7 @@
     <div fxFlex="100" fxFlex.gt-sm="25" fxFlex.sm="50">
       <mat-card [ngStyle]="{background: '#222A45'}">
         <mat-card-title align="center">
-          <h3 class="m-0 font-normal card-title-text text-white" >22,450</h3>
+          <h3 class="m-0 font-normal card-title-text text-white" >{{dataHistroy?.totalRecodeUpdate + dataHistroy?.totalRecodeInsert}}</h3>
         </mat-card-title>
         <mat-card-content align="center">
           <small class="text-white">Total Record</small>
@@ -30,7 +30,7 @@
     <div fxFlex="100" fxFlex.gt-sm="25" fxFlex.sm="50">
       <mat-card [ngStyle]="{background: '#3F51B5'}">
         <mat-card-title align="center">
-          <h3 class="m-0 font-normal card-title-text text-white">22,450</h3>
+          <h3 class="m-0 font-normal card-title-text text-white">{{dataHistroy?dataHistroy.totalRecodeUpdate: 0}}</h3>
         </mat-card-title>
         <mat-card-content align="center">
           <small class="text-white">Total Exist Record</small>
@@ -41,7 +41,7 @@
     <div fxFlex="100" fxFlex.gt-sm="25" fxFlex.sm="50">
       <mat-card [ngStyle]="{background: '#FF8A48'}">
         <mat-card-title align="center">
-          <h3 class="m-0 font-normal card-title-text text-white" >22,450</h3>
+          <h3 class="m-0 font-normal card-title-text text-white" >{{dataHistroy?dataHistroy.totalRecodeInsert: 0}}</h3>
         </mat-card-title>
         <mat-card-content align="center">
           <small class="text-white">Total New Record</small>
@@ -52,7 +52,7 @@
     <div fxFlex="100" fxFlex.gt-sm="25" fxFlex.sm="50">
       <mat-card [ngStyle]="{background: '#FF1515'}">
         <mat-card-title align="center">
-          <h3 class="m-0 font-normal card-title-text text-white" >22,450</h3> 
+          <h3 class="m-0 font-normal card-title-text text-white" >{{dataHistroy?.totalInsertRecodeFail + dataHistroy?.totalRecodeUpdateFail}}</h3> 
         </mat-card-title>
         <mat-card-content align="center">
           <small class="text-white">Total Fail Record</small>

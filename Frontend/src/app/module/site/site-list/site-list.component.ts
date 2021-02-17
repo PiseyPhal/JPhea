@@ -22,7 +22,7 @@ export class SiteListComponent extends AbstractGrid implements OnInit {
     private confirmService: AppConfirmService,
     private loader: AppLoaderService,
     private fb: FormBuilder
-  ) {super(siteService, loader, { isLoad: false }); }
+  ) {super(siteService, loader) }
 
   getcolumn(): AppColumn[] {
     return [
@@ -54,7 +54,7 @@ export class SiteListComponent extends AbstractGrid implements OnInit {
         displayName: 'Action', dataIndex: 'id', actionColumn: [
           {
             icon: 'visibility',
-            link: '/import/view',
+            link: '/site/view',
             tooltip: 'View'
           }
         ]

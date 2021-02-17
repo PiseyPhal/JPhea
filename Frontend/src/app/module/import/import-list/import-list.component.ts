@@ -1,9 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { MatTable } from '@angular/material/table';
 import { AbstractGrid, AppColumn, AppLoaderService } from '@ecoinsoft/core-frontend/src/public-api';
 import { AppConfirmService } from '@ecoinsoft/core-frontend/src/lib/shared/services/app-confirm/app-confirm.service';
 import { ImportService } from 'app/services/import.service';
-import {ActivatedRoute } from '@angular/router';
+import {ActivatedRoute, Router } from '@angular/router';
+import { SiteService } from 'app/services/site.service';
+import { HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'app-import-list',
@@ -13,11 +15,15 @@ import {ActivatedRoute } from '@angular/router';
 export class ImportListComponent extends AbstractGrid implements OnInit {
 
   @ViewChild(MatTable, {static: false}) itemTable: MatTable<any>;
-  
+  dataHistroy: any;
+  @ViewChild('file') fileInput: ElementRef;
+
   constructor
   (
     private importService: ImportService,
+    private siteService: SiteService,
     private confirmService: AppConfirmService,
+    private router: Router,
     private loader: AppLoaderService,
     private _route: ActivatedRoute
   ) {super(importService, loader, { isLoad: false }); }
@@ -62,10 +68,11 @@ export class ImportListComponent extends AbstractGrid implements OnInit {
 
 
   ngOnInit() {
-    const fileId: number = +this._route.snapshot.queryParamMap.get('fileId');
+    const importId: number = +this._route.snapshot.queryParamMap.get('importId');
 
-    if(fileId) {
-      this.getFileDetail(fileId);
+    if(importId) {
+      this.getFileDetail(importId);
+      this.getSiteList(importId);
     }
   }
 
@@ -74,19 +81,51 @@ export class ImportListComponent extends AbstractGrid implements OnInit {
    * @param event 
    */
   chooseDocument(event) {    
-    // Substring file's extention '.CSV'
-    let fileExtention = event.target.files[0].name
-    fileExtention = fileExtention.substring(fileExtention.lastIndexOf('.'))
-    // Compare extention file
-    if (fileExtention.toUpperCase() !== '.XLSX') {
-      // Return message warning of wrong file extention.
-      console.log('Uploading must be file is ".XLSX" format, Please try again.');
-      
-    }
+    const file = event.target ? event.target.files : event;
+    this.loader.open()
+
+    this.importService.importFile(file).subscribe(res => {
+      if (res['statusCode'] === '1') {
+        this.loader.close()
+        this.resetFile()
+        let importId = res['data']?.id;
+
+        // redirect import list
+        this.router.navigate(['/import/list'], {queryParams: {"importId": importId}});
+
+        this.getFileDetail(importId)
+        this.getSiteList(importId)
+      }
+    }, err => this.loader.close())
   }
 
+  // Get data import history by id of file import success.
   getFileDetail(id: number) {
+    this.loader.open()
+    this.importService.get(id).subscribe(res => {
+      if (res) {
+        this.dataHistroy = res['data']
+        this.loader.close()
+      }
+    }, err => this.loader.close())
     
+  }
+
+  // Get site list base on import history id
+  getSiteList(importId: number) {
+    const params = {
+      params : new HttpParams().set("importHistoryId", `${importId}`)
+    }
+    this.siteService.list(params).subscribe(res => {
+      if (res['statusCode'] === '1') {
+        this.dataStore = res
+      }
+    })
+  }
+
+   // Reset file to empty value.
+   private resetFile() {
+    this.fileInput.nativeElement.value = ''
   }
 
 }
