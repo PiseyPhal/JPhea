@@ -74,6 +74,7 @@ dependencies {
     testRuntime "org.seleniumhq.selenium:selenium-chrome-driver:3.14.0"
     testRuntime "org.seleniumhq.selenium:selenium-firefox-driver:3.14.0"
 
+    runtime "mysql:mysql-connector-java:8.0.22"
     compile 'org.grails.plugins:mongodb:7.0.0'
     compile 'com.hanuman.simplegeneric:com.hanuman.simplegeneric.plugin:1.0.1'
     compile 'org.grails.plugins:excel-export:2.1'
