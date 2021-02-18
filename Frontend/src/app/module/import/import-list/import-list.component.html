@@ -1,0 +1,71 @@
+<div fxLayout="row">
+  <div fxFlex="50">
+    <app-breadcrumb></app-breadcrumb>
+  </div>
+  <div fxLayout="row" fxLayoutGap="8px" fxFlex="50" fxLayoutAlign="end center">
+    <div fxLayout="row" fxLayoutAlign="end center">
+      <div class="upload-btn-wrapper">
+        <button type="button" mat-raised-button color="primary" matTooltip="import" class="mr-05" (click)="file.click()">
+          <mat-icon class="mr-05">cloud_upload</mat-icon> Import
+        </button>
+        <input type="file" accept=".xlsx" style="display: none" (change)="chooseDocument($event)" id="file" #file/>
+      </div>
+  
+      <button mat-raised-button color="primary" matTooltip="list" [routerLink]="['/site']" routerLinkActive="router-link-active" class="mr-05"><mat-icon class="mr-05">list</mat-icon>Site List</button>
+    </div>
+  </div>
+</div>
+
+<mat-card>
+  <div fxLayout="row wrap" class="mb-1">
+    <div fxFlex="100" fxFlex.gt-sm="25" fxFlex.sm="50">
+      <mat-card [ngStyle]="{background: '#222A45'}">
+        <mat-card-title align="center">
+          <h3 class="m-0 font-normal card-title-text text-white" >{{dataHistroy?.totalRecodeUpdate + dataHistroy?.totalRecodeInsert}}</h3>
+        </mat-card-title>
+        <mat-card-content align="center">
+          <small class="text-white">Total Record</small>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div fxFlex="100" fxFlex.gt-sm="25" fxFlex.sm="50">
+      <mat-card [ngStyle]="{background: '#3F51B5'}">
+        <mat-card-title align="center">
+          <h3 class="m-0 font-normal card-title-text text-white">{{dataHistroy?dataHistroy.totalRecodeUpdate: 0}}</h3>
+        </mat-card-title>
+        <mat-card-content align="center">
+          <small class="text-white">Total Exist Record</small>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div fxFlex="100" fxFlex.gt-sm="25" fxFlex.sm="50">
+      <mat-card [ngStyle]="{background: '#FF8A48'}">
+        <mat-card-title align="center">
+          <h3 class="m-0 font-normal card-title-text text-white" >{{dataHistroy?dataHistroy.totalRecodeInsert: 0}}</h3>
+        </mat-card-title>
+        <mat-card-content align="center">
+          <small class="text-white">Total New Record</small>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div fxFlex="100" fxFlex.gt-sm="25" fxFlex.sm="50">
+      <mat-card [ngStyle]="{background: '#FF1515'}">
+        <mat-card-title align="center">
+          <h3 class="m-0 font-normal card-title-text text-white" >{{dataHistroy?.totalInsertRecodeFail + dataHistroy?.totalRecodeUpdateFail}}</h3> 
+        </mat-card-title>
+        <mat-card-content align="center">
+          <small class="text-white">Total Fail Record</small>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <div fxLayout="row wrap" class="ml-05 mr-05">
+    <div fxFlex="100">
+      <app-grid [dataStore]="dataStore" [itemTableColumn]="itemTableColumn" (paginationChanged)="list($event)"></app-grid>
+    </div>
+  </div>
+</mat-card>
