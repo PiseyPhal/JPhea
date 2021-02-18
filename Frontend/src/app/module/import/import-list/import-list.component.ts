@@ -1,23 +1,38 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { MatTable } from '@angular/material/table';
-import { AbstractGrid, AppColumn, AppLoaderService } from '@ecoinsoft/core-frontend/src/public-api';
+import { Component, OnInit, ViewChild, ElementRef, EventEmitter } from '@angular/core';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
+import { AbstractGrid, AppColumn, AppLoaderService, Pagination } from '@ecoinsoft/core-frontend/src/public-api';
 import { AppConfirmService } from '@ecoinsoft/core-frontend/src/lib/shared/services/app-confirm/app-confirm.service';
 import { ImportService } from 'app/services/import.service';
 import {ActivatedRoute, Router } from '@angular/router';
 import { SiteService } from 'app/services/site.service';
 import { HttpParams } from '@angular/common/http';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-import-list',
   templateUrl: './import-list.component.html',
   styleUrls: ['./import-list.component.scss']
 })
-export class ImportListComponent extends AbstractGrid implements OnInit {
+export class ImportListComponent implements OnInit {
 
-  @ViewChild(MatTable, {static: false}) itemTable: MatTable<any>;
   dataHistroy: any;
+  sites: any[] = [];
   importId: number;
   @ViewChild('file') fileInput: ElementRef;
+  dataSource: MatTableDataSource<Site>;
+  @ViewChild(MatTable, {static: false}) itemTable: MatTable<any>;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+  pageSizeOptions: number[] = [10, 25, 50, 100, 500];
+  pageSize = 10 ;
+  totalPage: number;
+  pageIndex = 1;
+  pageStart = 0;
+  pagelimit = 10;
+  baseParams: {};
+  displayedColumns: string[] = ['SiteOwner', 'AdminCode', 'SRANName','BTSNameNoTect', 'ProductType','SiteCategory', 'Latitude', 'Longitude', 'Action'] ;
+
 
   constructor
   (
@@ -27,46 +42,7 @@ export class ImportListComponent extends AbstractGrid implements OnInit {
     private router: Router,
     private loader: AppLoaderService,
     private _route: ActivatedRoute
-  ) {super(importService, loader, { isLoad: false }); }
-
-  getcolumn(): AppColumn[] {
-    return [
-      {
-        displayName: 'Site Owner', dataIndex: 'siteOwner'
-      },
-      {
-        displayName: 'Admin Code', dataIndex: 'adminCode'
-      },
-      {
-        displayName: 'SRAN Name', dataIndex: 'sRANName'
-      },
-      {
-        displayName: 'BTS Name No Tect', dataIndex: 'bTSNameNoTech'
-      },
-      {
-        displayName: 'Product Type', dataIndex: 'productType'
-      },
-      {
-        displayName: 'Site Category', dataIndex: 'siteCategory'
-      },
-      {
-        displayName: 'Latitude', dataIndex: 'latitude'
-      },
-      {
-        displayName: 'Longitude', dataIndex: 'longitude'
-      },
-      {
-        displayName: 'Action', dataIndex: 'id', actionColumn: [
-          {
-            icon: 'visibility',
-            link: '/import/view',
-            tooltip: 'View'
-          }
-        ]
-      }
-    ];
-  }
-
+  ) { }
 
   ngOnInit() {
     this.importId = +this._route.snapshot.queryParamMap.get('importId');
@@ -98,34 +74,59 @@ export class ImportListComponent extends AbstractGrid implements OnInit {
     }, err => console.error("Unexpected error"))
   }
 
+  getNext(event) {
+    this.pageIndex = event.pageSize * event.pageIndex + 1;
+    const pageStart = event.pageSize * event.pageIndex;
+    const pageSizeOptions = event.pageSize;
+    this.pagelimit = pageSizeOptions;
+    
+    this.getSiteList(this.importId, this.pagelimit, pageStart)
+  }
+
   // Get data import history by id of file import success.
   private getFileDetail(id: number) {
-    this.loader.open()
     this.importService.get(id).subscribe(res => {
       if (res) {
         this.dataHistroy = res['data']
-        this.loader.close()
       }
-    }, err => this.loader.close())
+    });
     
   }
 
   // Get site list base on import history id
-  private getSiteList(importId: number) {
+  private getSiteList(importId: number, max: number = 10, offset: number = 0) {
+    this.loader.open()
     const params = {
       params : new HttpParams()
       .set("importHistoryId", `${importId}`)
+      .set("max", `${max}`)
+      .set("offset", `${offset}`)
     }
     this.siteService.list(params).subscribe(res => {
       if (res['statusCode'] === '1') {
-        this.dataStore = res
+        this.sites = res['data']
+        this.listDataSource(this.sites, res)
+        this.loader.close()
       }
-    })
+    }, err => this.loader.close());
   }
 
    // Reset file to empty value.
-   private resetFile() {
+  private resetFile() {
     this.fileInput.nativeElement.value = ''
+  }
+  
+   /**
+   * Get data on Site list into data source.
+   * @param requestItemList
+   * @param res
+   */
+  private listDataSource(requestItemList: any, res: any) {
+    this.dataSource = new MatTableDataSource(requestItemList);
+    this.dataSource.sort = this.sort;
+    this.totalPage = res['total'];
   }
 
 }
+
+export interface Site { }

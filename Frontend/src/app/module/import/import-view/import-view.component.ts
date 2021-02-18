@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { SiteService } from 'app/services/site.service';
 import { AppLoaderService } from '@ecoinsoft/core-frontend/src/public-api';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-import-view',
@@ -11,11 +11,13 @@ import { ActivatedRoute } from '@angular/router';
 export class ImportViewComponent implements OnInit {
   importId: number;
   siteId: number;
+  site: any;
 
   constructor(
     private siteService: SiteService,
     private loader: AppLoaderService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
     ) { }
 
   ngOnInit() { 
@@ -34,12 +36,16 @@ export class ImportViewComponent implements OnInit {
     this.siteService.get(this.siteId).subscribe(res => {
       if (res['statusCode'] === '1') {
         this.importId = res['data']?.importHistoryId
-
-        console.log(this.importId);
-        
+        this.site = res['data'];
         this.loader.close()
       }
     }, err => this.loader.close())
+  }
+
+
+  back() {
+    // back route
+    this.router.navigate(['/import/list'], {queryParams: {"importId": this.importId}});
   }
 
 

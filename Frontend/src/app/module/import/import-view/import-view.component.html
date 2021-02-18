@@ -3,7 +3,7 @@
       <app-breadcrumb></app-breadcrumb>
     </div>
     <div fxLayout="row" fxLayoutGap="8px" fxFlex="50" fxLayoutAlign="end center">
-        <button mat-raised-button [routerLink]="['/import']" routerLinkActive="router-link-active" >Back</button>
+        <button mat-raised-button type="button" (click)="back()" >Back</button>
     </div>
 </div>
 
@@ -14,7 +14,7 @@
             <div fxFlex="30" fxLayout="column">
                 <label for="ofm"><p class="font">Official Site Name</p></label> 
                 <label for="sran"><p class="font">SRAN Name</p></label> 
-                <label for="nn"><p class="font">Name No</p></label> 
+                <label for="nn"><p class="font">RNC Name</p></label> 
                 <label for="bts"><p class="font">BTS Name No Tech</p></label> 
                 <label for="ac"><p class="font">Admin Code</p></label> 
                 <label for="en"><p class="font">Edotco Name</p></label> 
@@ -26,17 +26,17 @@
             </div>
 
             <div fxFlex="70" fxLayout="column">
-                <p> : #---------</p>
-                <p> : #---------</p>
-                <p> : #---------</p>
-                <p> : #---------</p>
-                <p> : #---------</p>
-                <p> : #---------</p>
-                <p> : #---------</p>
-                <p> : #---------</p>
-                <p> : #---------</p>
-                <p> : #---------</p>
-                <p> : #---------</p>
+                <p> : {{site?.officialSiteName}}</p>
+                <p> : {{site?.sRANName}}</p>
+                <p> : {{site?.rncName}}</p>
+                <p> : {{site?.bTSNameNoTech}}</p>
+                <p> : {{site?.adminCode}}</p>
+                <p> : {{site?.edotcoName}}</p>
+                <p> : {{site?.productType}}</p>
+                <p> : {{site?.siteCategory}}</p>
+                <p> : {{site?.latitude}}</p>
+                <p> : {{site?.longitude}}</p>
+                <p> : {{site?.ibsSite}}</p>
             </div>
         </div>
 
@@ -51,23 +51,23 @@
                 <label for="en"><p class="font">e/iMacro RRU</p></label> 
                 <label for="pt"><p class="font">Subcon</p></label> 
                 <label for="sc"><p class="font">TCU</p></label>
-                <label for="pt"><p class="font">NetEco</p></label> 
+                <label for="pt"><p class="font">Site Owner</p></label> 
                 <label for="sc"><p class="font">Province</p></label>
                 <label for="sc"><p class="font">Area  Location</p></label>    
             </div>
 
             <div fxFlex="70" fxLayout="column">
-                <p> : #---------</p>
-                <p> : #---------</p>
-                <p> : #---------</p>
-                <p> : #---------</p>
-                <p> : #---------</p>
-                <p> : #---------</p>
-                <p> : #---------</p>
-                <p> : #---------</p>
-                <p> : #---------</p>
-                <p> : #---------</p>
-                <p> : #---------</p>
+                <p> : {{site?.ibsSite}}</p>
+                <p> : {{site?.criticalSite}}</p>
+                <p> : {{site?.vip}}</p>
+                <p> : {{site?.e_iMacroBBUName}}</p>
+                <p> : {{site?.donnerSite}}</p>
+                <p> : {{site?.e_iMacroRRU}}</p>
+                <p> : {{site?.subcon}}</p>
+                <p> : {{site?.tcu}}</p>
+                <p> : {{site?.province}}</p>
+                <p> : {{site?.siteOwner}}</p>
+                <p> : {{site?.areaLocation}}</p>
             </div>
         </div>
     </div>
