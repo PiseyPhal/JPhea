@@ -16,6 +16,7 @@ export class ImportListComponent extends AbstractGrid implements OnInit {
 
   @ViewChild(MatTable, {static: false}) itemTable: MatTable<any>;
   dataHistroy: any;
+  importId: number;
   @ViewChild('file') fileInput: ElementRef;
 
   constructor
@@ -68,11 +69,11 @@ export class ImportListComponent extends AbstractGrid implements OnInit {
 
 
   ngOnInit() {
-    const importId: number = +this._route.snapshot.queryParamMap.get('importId');
+    this.importId = +this._route.snapshot.queryParamMap.get('importId');
 
-    if(importId) {
-      this.getFileDetail(importId);
-      this.getSiteList(importId);
+    if(this.importId) {
+      this.getFileDetail(this.importId);
+      this.getSiteList(this.importId)
     }
   }
 
@@ -82,25 +83,23 @@ export class ImportListComponent extends AbstractGrid implements OnInit {
    */
   chooseDocument(event) {    
     const file = event.target ? event.target.files : event;
-    this.loader.open()
-
     this.importService.importFile(file).subscribe(res => {
       if (res['statusCode'] === '1') {
-        this.loader.close()
         this.resetFile()
-        let importId = res['data']?.id;
+        this.importId = res['data']?.id;
 
         // redirect import list
-        this.router.navigate(['/import/list'], {queryParams: {"importId": importId}});
-
-        this.getFileDetail(importId)
-        this.getSiteList(importId)
+        this.router.navigate(['/import/list'], {queryParams: {"importId": this.importId}});
+        this.getFileDetail(this.importId)
+        this.getSiteList(this.importId)
       }
-    }, err => this.loader.close())
+
+
+    }, err => console.error("Unexpected error"))
   }
 
   // Get data import history by id of file import success.
-  getFileDetail(id: number) {
+  private getFileDetail(id: number) {
     this.loader.open()
     this.importService.get(id).subscribe(res => {
       if (res) {
@@ -112,9 +111,10 @@ export class ImportListComponent extends AbstractGrid implements OnInit {
   }
 
   // Get site list base on import history id
-  getSiteList(importId: number) {
+  private getSiteList(importId: number) {
     const params = {
-      params : new HttpParams().set("importHistoryId", `${importId}`)
+      params : new HttpParams()
+      .set("importHistoryId", `${importId}`)
     }
     this.siteService.list(params).subscribe(res => {
       if (res['statusCode'] === '1') {

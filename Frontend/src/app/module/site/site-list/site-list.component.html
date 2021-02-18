@@ -5,7 +5,7 @@
     <div fxLayout="row" fxLayoutGap="8px" fxFlex="50" fxLayoutAlign="end center">
       <div>
         <button mat-raised-button color="primary" matTooltip="search" [matMenuTriggerFor]="theMenu">Advance Search</button>
-        <form [formGroup]="form" (ngSubmit)="search()">
+        <form [formGroup]="form">
           <mat-menu #theMenu="matMenu" [overlapTrigger]="false">
             <mat-toolbar-row (click)="$event.stopPropagation(); false;">
               <mat-form-field class="full-width">
@@ -21,22 +21,25 @@
             
             <mat-toolbar-row (click)="$event.stopPropagation(); false;">
               <mat-form-field class="full-width">
-                <input matInput type="password" placeholder="Hub name" name="hubName" formControlName="hubSite"/>
+                <input matInput type="text" placeholder="Hub name" name="hubName" formControlName="hubSite"/>
               </mat-form-field>
             </mat-toolbar-row>
             <mat-toolbar-row>
-              <button mat-raised-button color="primary" class="mr-05" [type]="'submit'"><mat-icon>search</mat-icon>Search</button>
-              <button mat-raised-button color="warn" (click)="clear()"><mat-icon>clear</mat-icon>Clear</button>
+              <button type="button" mat-raised-button color="primary" class="mr-05" (click)="search()"><mat-icon>search</mat-icon>Search</button>
+              <button type="button" mat-raised-button color="warn" (click)="clear()"><mat-icon>clear</mat-icon>Reset</button>
             </mat-toolbar-row>
           </mat-menu>
         </form>  
       </div>
 
       <div>
-        <button mat-raised-button color="primary" matTooltip="import"><mat-icon class="mr-05">cloud_upload</mat-icon>Import</button>
+        <button type="button" mat-raised-button color="primary" matTooltip="import" (click)="file.click()">
+          <mat-icon class="mr-05">cloud_upload</mat-icon> Import
+        </button>
+        <input type="file" accept=".xlsx" style="display: none" (change)="chooseDocument($event)" id="file" #file/>
       </div>
       <div class="mr-05">
-        <button mat-raised-button color="primary" matTooltip="export"><mat-icon class="mr-05">save_alt</mat-icon>Export</button>
+        <button type="button" mat-raised-button color="primary" matTooltip="export" (click)="export()"><mat-icon class="mr-05">save_alt</mat-icon>Export</button>
       </div>
     </div>
 </div>

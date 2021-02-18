@@ -24,6 +24,8 @@ export class ImportService extends AbstractRestService {
   }
 
   downloadFileTemplet() {
-    return this.httpService.get<DataResponse>(ApiEndpoint.FileTemplateAPI);
+    return this.httpService.get(ApiEndpoint.FileTemplateAPI, {
+      responseType: 'blob'
+    });
   }
 }
