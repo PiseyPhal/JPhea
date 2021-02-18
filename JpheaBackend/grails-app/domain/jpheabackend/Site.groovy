@@ -1,14 +1,11 @@
-package demoexcel
+package jpheabackend
 
-import grails.converters.JSON
+class Site {
 
-class DemoExcel {
     Integer adminCode
-
     String officialSiteName
     String sRANName
     String bTSNameNoTech
-
     String edotcoName
     String productType
     String siteCategory
@@ -37,38 +34,30 @@ class DemoExcel {
     String siteOwner
     String fiberRingInfo
     Integer uniRan_SRAN_ID
-
     String s1UIP
     String gws1UIP
     String s1UVLANID
-
     String s1CIP
     String gwS1CIP
     String s1CVLANID
-
     String mMEIP_S1C
-
     Integer _3GID
     String _3GIP
-
     String gw3GIP
     String _3GVLANID
-
     String rncIP
     String rncName
-
     Integer _2GID
     String _2GIP
-
     String gw2GIP
     Integer _2GVLANID
-
     String bscIP
     String bscName
-
     String omIP
     String gwOMIP
     String omVLANID
+    String hubSite
+    Integer importHistoryId
 
 
     static constraints = {
@@ -107,53 +96,49 @@ class DemoExcel {
         uniRan_SRAN_ID nullable: true
         s1UIP nullable: true
         gws1UIP nullable: true
-
         s1UVLANID nullable: true
         s1CIP nullable: true
         gwS1CIP nullable: true
-
         s1CVLANID nullable: true
         mMEIP_S1C nullable: true
-
         _3GID nullable: true
         _3GIP nullable: true
         gw3GIP nullable: true
         _3GVLANID nullable: true
-
         rncIP nullable: true
         rncName nullable: true
-
         _2GID nullable: true
         _2GIP nullable: true
         gw2GIP nullable: true
         _2GVLANID nullable: true
-
         bscIP nullable: true
         bscName nullable: true
         omIP nullable: true
         gwOMIP nullable: true
         omVLANID nullable: true
+        hubSite nullable: true
 
     }
+
 
     static mapping = {
         dynamicUpdate true
+
     }
 
-    static {
+/*    static {
         JSON.registerObjectMarshaller(this){
-            Map<String,DemoExcel> demoExcel = new LinkedHashMap<>(it.properties)
-            demoExcel.id = it.id
-            demoExcel.siteOwner = it.siteOwner
-            demoExcel.adminCode = it.adminCode
-            demoExcel.sRANName = it.sRANName
-            demoExcel.bTSNameNoTech = it.bTSNameNoTech
-            demoExcel.siteCategory = it.siteCategory
-            demoExcel.latitude = it.latitude
-            demoExcel.longitude = it.longitude
+            Map<String,jpheabackend.Site> site = new LinkedHashMap<>(it.properties)
+            site.id = it.id
+            site.siteOwner = it.siteOwner
+            site.adminCode = it.adminCode
+            site.sRANName = it.sRANName
+            site.bTSNameNoTech = it.bTSNameNoTech
+            site.siteCategory = it.siteCategory
+            site.latitude = it.latitude
+            site.longitude = it.longitude
 
-            return demoExcel
+            return site
         }
-    }
-
+    }*/
 }

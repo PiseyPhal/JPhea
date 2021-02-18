@@ -2,15 +2,19 @@ package demoexcel
 
 import corebackend.simplegenericrestfulcontroller.generic.PaginationCommand
 import grails.gorm.transactions.Transactional
-import grails.transaction.Rollback
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
+import org.hibernate.StaleStateException
 import org.hibernate.StatelessSession
 import org.hibernate.Transaction
+import org.springframework.transaction.annotation.Propagation
 
-@Transactional
-class ExcelImportService {
+
+@Transactional(propagation = Propagation.REQUIRES_NEW)
+class FileUploadService {
     def sessionFactory
+    def importHistoryService
 
+//######### sub service #########
     def validateHeader(def domainProperty, String fileHeader) {
 
         domainProperty.find {
@@ -23,8 +27,19 @@ class ExcelImportService {
             }
         }
     }
+    Map mapData(Site site){
+        Map map = [:]
+        map.siteOwner = site.siteOwner
+        map.adminCode = site.adminCode
+        map.sRANName = site.sRANName
+        map.bTSNameNoTech = site.bTSNameNoTech
+        map.siteCategory = site.siteCategory
+        map.latitude = site.latitude
+        map.longitude = site.longitude
 
-    private static DemoExcel bindData(DemoExcel obj, def data) {
+        return map
+    }
+    private static Site bindData(Site obj, Map data,Integer importHistoryId) {
         obj.adminCode = data['Admin Code']
         obj.officialSiteName = data['Official Site Name']
         obj.sRANName = data['SRAN Name']
@@ -79,31 +94,24 @@ class ExcelImportService {
         obj.omIP = data['OMIP']
         obj.gwOMIP = data['GWOMIP']
         obj.omVLANID = data['OMVLANID']
+        obj.hubSite = data['Hub_Site']
+
+        if (importHistoryId){
+            obj.importHistoryId = importHistoryId
+        }
         return obj
     }
+//----------------------------------------------------------
 
-    Map mapData(DemoExcel demoExcel){
-        Map map = [:]
-        map.siteOwner = demoExcel.siteOwner
-        map.adminCode = demoExcel.adminCode
-        map.sRANName = demoExcel.sRANName
-        map.bTSNameNoTech = demoExcel.bTSNameNoTech
-        map.siteCategory = demoExcel.siteCategory
-        map.latitude = demoExcel.latitude
-        map.longitude = demoExcel.longitude
 
-        return map
-    }
 
+//######### upload-save service #########
 
     def loadDataFromFile(def file) {
-
-        def workbook = new XSSFWorkbook(file.getInputStream())
+        FileInputStream fs =file.getInputStream()
+        def workbook = new XSSFWorkbook(fs)
         def sheet = workbook.getSheetAt(0)
 
-        Map fileProperties = [:]
-        fileProperties.orginalFileName = file.getOriginalFilename()
-        fileProperties.sheetName = sheet.sheetName
 
         //column header
         def sheetheader = []
@@ -137,106 +145,105 @@ class ExcelImportService {
             }
         }
 
+        return values
+    }
+    def saveToSite(List<Map> values,String orginalfileName){
         //split data for insert and update to 2 list
         ArrayList<Map> rawDataForUpdate = new ArrayList<>()
         ArrayList<Map> rawDataForInsert = new ArrayList<>()
 
-        def listAdminCode = DemoExcel.findAllByAdminCodeInList(values['Admin Code'] as List<Integer>)*.adminCode
+        def listAdminCode = Site.findAllByAdminCodeInList(values['Admin Code'] as List<Integer>)*.adminCode
 
-        if (listAdminCode) {
-            values.each { rawData ->
+        values.each { rawData ->
 
-                //if contains we replace old value
-                if (listAdminCode.contains(rawData['Admin Code'] as Integer)) {
-                    rawDataForUpdate.add(rawData)
+            //if contains we replace old value
+            if (listAdminCode.contains(rawData['Admin Code'] as Integer)) {
+                rawDataForUpdate.add(rawData)
 
-                } else {
-                    rawDataForInsert.add(rawData)
-                }
+            } else {
+                rawDataForInsert.add(rawData)
             }
         }
 
 
         //save to Database
-        println "im insert ${rawDataForInsert}"
-        println "im update ${rawDataForUpdate}"
-
         Map resultOFInsert=[totalInsert: 0, totalFail: 0]
         Map resultOFUpdate=[totalUpdate: 0, totalFail: 0]
 
+        ImportHistory history = importHistoryService.saveDefault(new ImportHistory())
+
         if (rawDataForInsert){
-            resultOFInsert = InsertRecords(rawDataForInsert)
+            resultOFInsert = InsertRecords(rawDataForInsert,history.id as Integer)
         }
-        if (rawDataForUpdate){
+
+        if (rawDataForUpdate) {
             resultOFUpdate = updateRecords(rawDataForUpdate)
         }
 
         Map result = [:]
-        result.fileInfo = fileProperties
+        result.fileInfo = orginalfileName
         result.insertInfo = resultOFInsert
         result.updateInfo = resultOFUpdate
+        importHistoryService.save(history,result)
 
         return result
     }
-
-    def InsertRecords(def values) {
+    def InsertRecords(List<Map> values,Integer importId) {
         Map insertInfo = [totalInsert: 0, totalFail: 0]
 
-        StatelessSession session = sessionFactory.openStatelessSession()
-        Transaction tx = session.beginTransaction()
-
-
-        values.each { mapData ->
-            try {
-
-                session.insert(bindData(new DemoExcel(), mapData))
+        Site.withStatelessSession {
+            StatelessSession session = sessionFactory.openStatelessSession()
+            Transaction tx = session.beginTransaction()
+            values.each { mapData ->
+                //bindData(new Site(), mapData,importId).save(flush:true)
+                session.insert(bindData(new Site(), mapData,importId))
                 insertInfo.totalInsert++
-
-
-            } catch (IOException e) {
-                insertInfo.totalFail++
-                log.error(e.message)
             }
+            tx.commit()
+            session.close()
         }
-        tx.commit()
-        session.close()
-
         return insertInfo
     }
-
     def updateRecords(ArrayList<Map> listDataUpdate) {
         Map updateInfo = [totalUpdate: 0, totalFail: 0]
 
-        StatelessSession session = sessionFactory.openStatelessSession()
-        Transaction tx = session.beginTransaction()
-        def demoExcel = DemoExcel.findAllByAdminCodeInList(listDataUpdate['Admin Code'] as List<Integer>)
+        def sites = Site.findAllByAdminCodeInList(listDataUpdate['Admin Code'] as List<Integer>)
+        Integer i=0
 
-
-        for (int i = 0; i < demoExcel.size(); i++) {
-            try {
-                session.update(bindData(demoExcel[i], listDataUpdate[i]))
+        Site.withStatelessSession {
+            StatelessSession session = sessionFactory.openStatelessSession()
+            Transaction tx = session.beginTransaction()
+            sites.each {
+                bindData(it,listDataUpdate[i],null)
                 updateInfo.totalUpdate++
-
-            } catch (IOException e) {
-                updateInfo.totalFail++
-                log.error(e.message)
+                i++
             }
-        }
-        tx.commit()
-        session.close()
 
+            tx.commit()
+            session.close()
+        }
         return updateInfo
 
     }
+//---------------------------------------------------------
 
-    def listData(PaginationCommand pagination,Integer adminCode, String officialSiteName){
-        def resultList = DemoExcel.createCriteria().list (pagination.params) {
+
+
+//######### sub service #########
+    def listSite(PaginationCommand pagination, Integer adminCode, String officialSiteName, String hubSite,Integer importHistoryId){
+        def resultList = Site.createCriteria().list (pagination.params) {
             or {
                 if (adminCode){
                     eq("adminCode",adminCode)
                 }
                 if (officialSiteName){
                     ilike("officialSiteName","%${officialSiteName}%")
+                }
+                if (hubSite){
+                    ilike("hubSite","%${hubSite}%")
+                }
+                if (importHistoryId){
+                    eq("importHistoryId",importHistoryId)
                 }
             }
         }

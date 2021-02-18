@@ -1,9 +1,9 @@
 package demoexcel
 
-import grails.testing.services.ServiceUnitTest
+import grails.testing.web.controllers.ControllerUnitTest
 import spock.lang.Specification
 
-class ExcelImportServiceSpec extends Specification implements ServiceUnitTest<ExcelImportService>{
+class FileUploadControllerSpec extends Specification implements ControllerUnitTest<FileUploadController> {
 
     def setup() {
     }

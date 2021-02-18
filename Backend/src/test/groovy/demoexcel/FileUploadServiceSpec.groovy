@@ -1,9 +1,9 @@
 package demoexcel
 
-import grails.testing.gorm.DomainUnitTest
+import grails.testing.services.ServiceUnitTest
 import spock.lang.Specification
 
-class DemoExcelSpec extends Specification implements DomainUnitTest<DemoExcel> {
+class FileUploadServiceSpec extends Specification implements ServiceUnitTest<FileUploadService>{
 
     def setup() {
     }
